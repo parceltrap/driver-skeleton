@@ -25,9 +25,7 @@ use ParcelTrap\Skeleton\Skeleton;
 
 $parcelTrap = ParcelTrap::make([
     'skeleton' => Skeleton::make([
-        'client_id' => 'your-client-id',
-        'client_secret' => 'your-client-secret',
-        'accept_terms' => true,
+        'api_key' => 'your-api-key',
     ]);
 ]);
 ```
@@ -38,7 +36,7 @@ Add the following to your `config/parceltrap.php` configuration file:
 
 ```php
 'skeleton' => [
-    'client_id' => env('PARCELTRAP_SKELETON_API_KEY'),
+    'api_key' => env('PARCELTRAP_SKELETON_API_KEY'),
     'driver' => ParcelTrap\Skeleton\Skeleton::class,
 ],
 ```
