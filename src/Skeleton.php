@@ -44,18 +44,19 @@ class Skeleton implements Driver
         // ...
 
         return new TrackingDetails(
-            identifier: $identifier,
+            identifier: $json['tracking_number'],
             status: $this->mapStatus($json['status'] ?? 'unknown'),
             summary: 'Package status is: '.$this->mapStatus($json['status'] ?? 'unknown')->description(),
-            estimatedDelivery: new DateTimeImmutable($json['status'] ?? 'now'),
+            estimatedDelivery: new DateTimeImmutable($json['estimated_delivery'] ?? 'now'),
             events: [],
-            raw: [],
+            raw: $json,
         );
     }
 
     private function mapStatus(string $status): Status
     {
         return match ($status) {
+            'transit' => Status::In_Transit,
             default => Status::Unknown,
         };
     }
