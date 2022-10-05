@@ -14,21 +14,15 @@ use ParcelTrap\Enums\Status;
 
 class Skeleton implements Driver
 {
+    public const IDENTIFIER = 'skeleton';
+
     public const BASE_URI = 'https://api.example.com';
+
     private ClientInterface $client;
 
-    private function __construct(private string $apiKey, ?ClientInterface $client = null)
+    public function __construct(private readonly string $apiKey, ?ClientInterface $client = null)
     {
         $this->client = $client ?? GuzzleFactory::make(['base_uri' => self::BASE_URI]);
-    }
-
-    /** @param array{api_key: string} $config */
-    public static function make(array $config, ?ClientInterface $client = null): self
-    {
-        return new self(
-            apiKey: $config['api_key'],
-            client: $client,
-        );
     }
 
     public function find(string $identifier, array $parameters = []): TrackingDetails

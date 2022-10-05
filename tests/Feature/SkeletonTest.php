@@ -6,23 +6,26 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use ParcelTrap\Contracts\Factory;
 use ParcelTrap\DTOs\TrackingDetails;
 use ParcelTrap\Enums\Status;
 use ParcelTrap\ParcelTrap;
 use ParcelTrap\Skeleton\Skeleton;
 
 it('can add the Skeleton driver to ParcelTrap', function () {
-    $client = ParcelTrap::make(['skeleton' => Skeleton::make(['api_key' => 'abcdefg'])]);
-    $client->addDriver('skeleton_other', Skeleton::make(['api_key' => 'abcdefg']));
+    /** @var ParcelTrap $client */
+    $client = $this->app->make(Factory::class);
 
-    expect($client)->hasDriver('skeleton')->toBeTrue();
-    expect($client)->hasDriver('skeleton_other')->toBeTrue();
+    $client->extend('skeleton_other', fn () => new Skeleton(
+        apiKey: 'abcdefg'
+    ));
+
+    expect($client)->driver(Skeleton::IDENTIFIER)->toBeInstanceOf(Skeleton::class)
+        ->and($client)->driver('skeleton_other')->toBeInstanceOf(Skeleton::class);
 });
 
 it('can retrieve the Skeleton driver from ParcelTrap', function () {
-    expect(ParcelTrap::make(['skeleton' => Skeleton::make(['api_key' => 'abcdefg'])]))
-        ->hasDriver('skeleton')->toBeTrue()
-        ->driver('skeleton')->toBeInstanceOf(Skeleton::class);
+    expect($this->app->make(Factory::class)->driver(Skeleton::IDENTIFIER))->toBeInstanceOf(Skeleton::class);
 });
 
 it('can call `find` on the Skeleton driver', function () {
@@ -42,7 +45,12 @@ it('can call `find` on the Skeleton driver', function () {
         'handler' => $handlerStack,
     ]);
 
-    expect(ParcelTrap::make(['skeleton' => Skeleton::make(['api_key' => 'abcdefg'], $httpClient)])->driver('skeleton')->find('ABCDEFG12345'))
+    $this->app->make(Factory::class)->extend(Skeleton::IDENTIFIER, fn () => new Skeleton(
+        apiKey: 'abcdefg',
+        client: $httpClient,
+    ));
+
+    expect($this->app->make(Factory::class)->driver('skeleton')->find('ABCDEFG12345'))
         ->toBeInstanceOf(TrackingDetails::class)
         ->identifier->toBe('ABCDEFG12345')
         ->status->toBe(Status::In_Transit)
