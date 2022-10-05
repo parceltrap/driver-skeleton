@@ -22,7 +22,7 @@ class SkeletonServiceProvider extends ServiceProvider
 
             return new Skeleton(
                 /** @phpstan-ignore-next-line */
-                apiKey: (string) $config->get('parceltrap.skeleton.api_key'),
+                apiKey: (string) $config->get('parceltrap.drivers.skeleton.api_key'),
             );
         });
     }
