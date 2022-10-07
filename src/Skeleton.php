@@ -27,13 +27,13 @@ class Skeleton implements Driver
 
     public function find(string $identifier, array $parameters = []): TrackingDetails
     {
-        $request = $this->client->request('GET', '/tracking', [
+        $response = $this->client->request('GET', '/tracking', [
             RequestOptions::HEADERS => $this->getHeaders(),
             RequestOptions::QUERY => array_merge(['id' => $identifier], $parameters),
         ]);
 
         /** @var array $json */
-        $json = json_decode($request->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         // ...
 
