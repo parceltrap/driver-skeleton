@@ -20,7 +20,7 @@ class Skeleton implements Driver
 
     private ClientInterface $client;
 
-    public function __construct(private readonly string $apiKey, ?ClientInterface $client = null)
+    public function __construct(private readonly string $apiKey, ClientInterface|null $client = null)
     {
         $this->client = $client ?? GuzzleFactory::make(['base_uri' => self::BASE_URI]);
     }
