@@ -32,7 +32,7 @@ class Skeleton implements Driver
             RequestOptions::QUERY => array_merge(['id' => $identifier], $parameters),
         ]);
 
-        /** @var array $json */
+        /** @var array{tracking_number: string, status?: string, estimated_delivery?: string} $json */
         $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         // ...
