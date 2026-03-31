@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace ParcelTrap\Skeleton;
 
-use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\ServiceProvider;
 use ParcelTrap\Contracts\Factory;
 use ParcelTrap\ParcelTrap;
@@ -16,9 +17,9 @@ class SkeletonServiceProvider extends ServiceProvider
         /** @var ParcelTrap $factory */
         $factory = $this->app->make(Factory::class);
 
-        $factory->extend(Skeleton::IDENTIFIER, function () {
-            /** @var Repository $config */
-            $config = $this->app->make(Repository::class);
+        $factory->extend(Skeleton::IDENTIFIER, function (Container $container) {
+            /** @var ConfigRepository $config */
+            $config = $container->make(ConfigRepository::class);
 
             return new Skeleton(
                 /** @phpstan-ignore-next-line */
